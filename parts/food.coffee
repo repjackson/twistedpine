@@ -12,6 +12,14 @@ if Meteor.isClient
 
     Template.food.onCreated ->
         @autorun => @subscribe 'food', ->
+            
+    Template.food.events 
+        'click .add_food': ->
+            new_id = 
+                Docs.insert 
+                    model:'food'
+            Router.go "/food/#{new_id}/edit"
+            
     Template.food_view.onCreated ->
         @autorun => @subscribe 'food_orders',Router.current().params.doc_id, ->
     

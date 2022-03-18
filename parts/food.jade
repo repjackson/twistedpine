@@ -1,6 +1,9 @@
 template(name='food')
     .ui.stackable.padded.grid
         .sixteen.wide.column
+            if currentUser
+                .ui.button.add_food
+                    i.large.plus.icon
             .ui.inline.header 
                 +ibig name='pizza'
                 |food
