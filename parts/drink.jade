@@ -7,7 +7,7 @@ template(name='drinks')
             +drink_card
         
 template(name='drink_card')
-    a.card(href="/drink/#{_id}")
+    a.card.fly_right(href="/drink/#{_id}")
         img.ui.centered.image(src="{{c.url image_id height=500 width=500 background='white' crop='pad'}}")
         .content
             a.ui.header(href="/drink/#{_id}") #{title}
@@ -19,7 +19,7 @@ template(name='drink_edit')
         .ui.stackable.padded.grid
             .two.column.row
                 .column
-                    a.ui.big.icon.green.circular.button(href="/#{model}/#{_id}/")
+                    a.ui.big.icon.green.circular.button.fly_down(href="/#{model}/#{_id}/")
                         i.checkmark.big.icon
                     .ui.inline.header 
                         small editing
@@ -28,13 +28,15 @@ template(name='drink_edit')
                     +text_edit key='title' icon='header' direct=true
                     +image_edit key='image_id' direct=true
                     +array_edit key='tags' icon='tags' direct=true
-                    +array_edit key='location_tags' label='location tags' icon='marker' direct=true
+                    // +array_edit key='location_tags' label='location tags' icon='marker' direct=true
                     .ui.icon.small.red.button.delete_drink_item 
                         i.trash.icon
                     if in_dev
                         +print_this
-                    +float_edit key='abv' label='abv %' direct=true
-                    +float_edit key='ibu' label='ibu' direct=true
+                    div
+                    +float_edit key='abv' label='abv %' icon='beer' direct=true
+                    div
+                    +float_edit key='ibu' label='ibu' icon='beer' direct=true
                     +html_edit key='description' direct=true
                 .column
                     // +number_edit key='point_price' icon='coins' label='point price' direct=true
@@ -95,18 +97,18 @@ template(name='drink_view')
                         i.left.chevron.icon
                         +i name='shop' cl='ui inline image'
                     if can_edit
-                        a.ui.icon.large.basic.button(href="/drink/#{_id}/edit")
+                        a.ui.icon.large.button(href="/drink/#{_id}/edit")
                             i.pencil.large.blue.icon
-                    +bookmark_button
+                    +favorite_button
                     .ui.small.inline.header
                         |added by #{_author_username}
                         |#{when}
                     .ui.hidden.divider
                     +voting_full
-                    a.ui.fluid.basic.green.big.button.add_to_cart
+                    a.ui.fluid.basic.green.big.disabled.button.add_to_cart
                         i.cart.plus.icon
                         |add to cart
-                    a.ui.fluid.green.big.button.quick_buy
+                    a.ui.fluid.green.big.disabled.button.quick_buy
                         i.lightning.icon
                         |quick buy
                     .ui.header 

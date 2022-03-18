@@ -15,6 +15,11 @@ if Meteor.isClient
         @autorun => @subscribe 'drinks', ->
             
     Template.food.events 
+        'keyup .search_food': (e,t)->
+            # if e.which is 13
+            query = t.$('.search_food').val()
+            console.log query
+            Session.set('current_query', query)
         'click .add_food': ->
             new_id = 
                 Docs.insert 

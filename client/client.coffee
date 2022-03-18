@@ -1,6 +1,5 @@
-@selected_rental_tags = new ReactiveArray []
 @picked_tags = new ReactiveArray []
-@selected_ingredients = new ReactiveArray []
+@picked_ingredients = new ReactiveArray []
 
 
 Tracker.autorun ->
@@ -15,7 +14,7 @@ $.cloudinary.config
 # Router.notFound =
     # action: 'not_found'
 
-Template.body.events
+Template.layout.events
     'click .fly_up': (e,t)->
         # console.log 'hi'
         $(e.currentTarget).closest('.grid').transition('slide up', 500)

@@ -113,16 +113,6 @@ if Meteor.isClient
 
 
 
-    Template.user_reservations.onCreated ->
-        @autorun => Meteor.subscribe 'user_reservations', Router.current().params.username
-        @autorun => Meteor.subscribe 'model_docs', 'rental'
-    Template.user_reservations.helpers
-        reservations: ->
-            current_user = Meteor.users.findOne username:Router.current().params.username
-            Docs.find {
-                model:'reservation'
-            }, sort:_timestamp:-1
-
 
     Template.user_credit.onCreated ->
         # @autorun => Meteor.subscribe 'joint_transactions', Router.current().params.username
@@ -210,19 +200,6 @@ if Meteor.isClient
         @autorun => Meteor.subscribe 'user_handling', Router.current().params.username
         @autorun => Meteor.subscribe 'user_current_reservations', Router.current().params.username
     Template.user_dashboard.helpers
-        current_reservations: ->
-            Docs.find
-                model:'reservation'
-                user_username:Router.current().params.username
-        upcoming_reservations: ->
-            Docs.find
-                model:'reservation'
-                user_username:Router.current().params.username
-        current_handling_rentals: ->
-            current_user = Meteor.users.findOne username:Router.current().params.username
-            Docs.find
-                model:'rental'
-                handler_username:current_user.username
         current_interest_rate: ->
             interest_rate = 0
             if Meteor.user().handling_active

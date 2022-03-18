@@ -54,25 +54,25 @@ template(name='nav')
                 +i name='beer' cl='ui inline mini image'
                 |drinks
             a.item.zoomer(href='/food' class="{{isActivePath '/food'}}" title='food')
-                +i name='food' cl='ui inline mini image'
-                |menus
-            a.item.zoomer(href='/orders' class="{{isActivePath '/orders'}}" title='orders')
+                +i name='pizza' cl='ui inline mini image'
+                |food
+            a.disabled.item.zoomer(href='/orders' class="{{isActivePath '/orders'}}" title='orders')
                 +i name='order-history' cl='ui inline mini image'
                 |orders
-            a.item.zoomer(href='/customers' class="{{isActivePath '/customers'}}" title='orders')
+            a.disabled.item.zoomer(href='/customers' class="{{isActivePath '/customers'}}" title='orders')
                 +i name='groups' cl='ui inline mini image'
                 |customers
-            a.item.zoomer(href='/staff' class="{{isActivePath '/staff'}}" title='orders')
+            a.disabled.item.zoomer(href='/staff' class="{{isActivePath '/staff'}}" title='orders')
                 +i name='shield' cl='ui inline mini image'
                 |staff
         .right.menu
-            if cart_items 
+            if cart_items
                 a.item(href="/cart") 
                     each cart_items 
                         img.ui.avatar.image(src="{{c.url ref_product.image_id width=200 height=200 gravity='face' crop='fill'}}")
-            a.item(href='/tasks' class="{{isActivePath '/tasks'}}" title='tasks')
+            a.disabled.item(href='/tasks' class="{{isActivePath '/tasks'}}" title='tasks')
                 +i name='tasks' cl='ui inline mini image'
-            a.icon.item(href='/alerts' class="{{isActivePath '/alerts'}}" title='alerts')
+            a.icon.item(href='/inbox' class="{{isActivePath '/inbox'}}" title='inbox')
                 i.large.bell.icon
             if currentUser
                 a.item(href="/user/#{currentUser.username}/credit" class="{{isActiveRoute regex='user_credit'}}" title='your credits')

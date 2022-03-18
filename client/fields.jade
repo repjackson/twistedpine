@@ -554,14 +554,14 @@ template(name='array_edit')
     // if icon
     //     i.grey.icon(class=i)
     //     // +i name=icon cl='ui avatar image'
-    // .ui.inline.header
-    //     |#{field_value.length}
-    //     if title
-    //         |#{title}
-    //     else if label
-    //         |#{label}
-    //     else if key
-    //         |#{key}
+    .ui.inline.header
+        |#{field_value.length}
+        if title
+            |#{title}
+        else if label
+            |#{label}
+        else if key
+            |#{key}
     .ui.icon.large.input
         i.icon
             +i name=icon cl='ui inline image'

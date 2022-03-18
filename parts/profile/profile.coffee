@@ -31,10 +31,14 @@ if Meteor.isClient
         @layout 'user_layout'
         @render 'user_messages'
         ), name:'user_messages'
-    Router.route '/user/:username/groups', (->
+    Router.route '/user/:username/favorites', (->
         @layout 'user_layout'
-        @render 'user_groups'
-        ), name:'user_groups'
+        @render 'user_favorites'
+        ), name:'user_favorites'
+    Router.route '/user/:username/health', (->
+        @layout 'user_layout'
+        @render 'user_health'
+        ), name:'user_health'
     Router.route '/user/:username/notifications', (->
         @layout 'user_layout'
         @render 'user_notifications'
@@ -50,11 +54,11 @@ if Meteor.isClient
 
 
 
-    Template.user_bookmarks.onCreated ->
+    Template.user_favorites.onCreated ->
         @autorun -> Meteor.subscribe 'user_bookmarked_docs', Router.current().params.username
 
 
-    Template.user_bookmarks.helpers
+    Template.user_favorites.helpers
         bookmarked_docs: ->
             user = Meteor.users.findOne username:Router.current().params.username
             Docs.find 

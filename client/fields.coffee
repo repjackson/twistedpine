@@ -169,6 +169,9 @@ Template.image_edit.events
                     if doc
                         Docs.update parent._id,
                             $set:"#{@key}":res.public_id
+                    else 
+                        Meteor.users.update parent._id,
+                            $set:"#{@key}":res.public_id
 
     'click .call_cloud_visual': (e,t)->
         Meteor.call 'call_visual', Router.current().params.doc_id, 'cloud', ->

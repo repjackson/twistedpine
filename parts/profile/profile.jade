@@ -39,18 +39,18 @@ template(name='user_layout')
                     +send_points_button
                     +request_button
                 .twelve.wide.column
-                    +profile_nav_button label='dashboard' icon='dashboard' key='dashboard'
-                    +profile_nav_button label='favorites' icon='heart' key='favorites'
-                    +profile_nav_button label='orders' icon='money' key='orders'
-                    a.ui.large.button(href="/user/#{username}/credit" class="{{isActiveRoute regex='user_credit'}}")
-                        +i name='money' cl='ui avatar image'
-                        |credit
-                    a.ui.large.button(href="/user/#{username}/friends" class="{{isActiveRoute 'user_friends'}}")
-                        +i name='meeting' cl='ui avatar image'
-                        |friends
-                    a.ui.large.button(href="/user/#{username}/health" class="{{isActiveRoute 'user_health'}}")
-                        +i name='pulse' cl='ui avatar image'
-                        |health
+                    // +profile_nav_button label='dashboard' icon='dashboard' key='dashboard'
+                    // +profile_nav_button label='favorites' icon='heart' key='favorites'
+                    // +profile_nav_button label='orders' icon='money' key='orders'
+                    // a.ui.large.button(href="/user/#{username}/credit" class="{{isActiveRoute regex='user_credit'}}")
+                    //     +i name='money' cl='ui avatar image'
+                    //     |credit
+                    // a.ui.large.button(href="/user/#{username}/friends" class="{{isActiveRoute 'user_friends'}}")
+                    //     +i name='meeting' cl='ui avatar image'
+                    //     |friends
+                    // a.ui.large.button(href="/user/#{username}/health" class="{{isActiveRoute 'user_health'}}")
+                    //     +i name='pulse' cl='ui avatar image'
+                    //     |health
         
                     div.global_container
                         .spacer
@@ -85,20 +85,14 @@ template(name='role_viewer')
 
 
 
-template(name='subscribe_user_button')
-    .ui.button.subscribe_user
-        +i name='subscription'
-        |subscribe
 
 template(name='user_dashboard')
     .ui.stackable.grid
         .two.column.row
             .column.smallscroll
-                +user_bookmarks
+                +user_favorites
             .column.smallscroll
                 +user_orders_small
-            .column.smallscroll
-                +user_reservations_small
             .column.smallscroll
                 +user_friends
             .column.smallscroll
@@ -113,30 +107,23 @@ template(name='user_orders_small')
         +i name='order-history'
         |orders
 
-template(name='user_reservations_small')
+template(name='user_health')
     .ui.header
-        +i name='clock'
-        | reservations
+        +i name='pulse'
+        | health
+    .ui.header calories consumed 
 template(name='user_products_small')
     .ui.header  
         +i name='shop'
         |products
 
-template(name='user_reservations')
-    .ui.header 
-        +i name='clock'
-        |reservations
-    .scrolling
-        .ui.segments
-            each reservations 
-                +profile_reservation_item
 
-template(name='user_bookmarks')
+template(name='user_favorites')
     .ui.header 
-        +i name='bookmark'
-        |bookmarks
+        +i name='heart'
+        |favorites
     .ui.selection.link.animated.list
-        each bookmarked_docs 
+        each favoriteed_docs 
             a.item.fly_right(href="/product/#{_id}") 
                 img.ui.avatar.image(src="{{c.url image_id height=200 width=200 background='white' crop='pad'}}")
                 |#{title}
@@ -163,80 +150,3 @@ template(name='user_friends')
                     each friended
                         a.item(href="/user/#{username}") #{username}
 
-
-template(name='profile_reservation_item')
-    .ui.segment.grid
-        .row
-            .twelve.wide.column
-                .ui.header #{rental.title}
-        .row
-            .four.wide.column
-                with rental
-                    //- img.ui.mini.image(src=image)
-                    +image_view key='image_id' direct=true cl='zoom ui tiny image'
-            .twelve.wide.column
-                a.ui.header.inline.lowercase(href="/reservation/#{_id}/")
-                    small from 
-                    |{{cal_time start_datetime}}
-                a.ui.header.inline.lowercase(href="/reservation/#{_id}/")
-                    small to 
-                    |{{cal_time end_datetime}}
-                div
-                .ui.grey.inline.header #{hour_duration} hrs
-                .ui.grey.inline.header(title='credits')
-                    i.coins.icon
-                    | #{cost}
-                .ui.small.inline.header #{when} by #{_author_username}
-                a.ui.large.button(href="/reservation/#{_id}/")
-                    |view
-                    i.right.chevron.icon
-                if is_admin
-                    +remove_button
-
-
-
-template(name='user_handling')
-    .ui.small.header rentals that member is facilitating
-    .ui.three.cards
-        each handling_rentals 
-            +user_rental_card
-        
-        
-        
-template(name='user_rental_card')
-    .ui.small.card
-        a.zoom(href="/rental/#{_id}/")
-            img.ui.centered.image(src="{{c.url image_id height=200 width=200 background='white' crop='pad'}}")
-        .content
-            a.ui.inline.header(href="/rental/#{_id}/") #{title} 
-                if variable_price
-                    |~
-                if hourly_dollars
-                    .ui.label #{hourly_dollars}c/hr
-                if daily_dollars
-                    .ui.label #{daily_dollars}c/day
-            //- if hourly_karma
-            //-     +ismall name='yin-yang'
-            //-     |#{hourly_karma}/hr
-            //- if daily_karma
-            //-     +ismall name='yin-yang'
-            //-     | #{daily_karma}/day
-            +rental_status
-        .content
-            span(title='views')
-                +ismall name='eye'
-                |#{views}
-            div
-            +ismall name='marker'
-            each location_tags
-                .ui.label #{this}
-            div
-            +ismall name='tags'
-            each tags
-                .ui.label #{this}
-            +user_list_toggle key='bookmark_ids' add_icon='bookmark outline' remove_icon='bookmark' add_label='bookmark' remove_label='unbookmark'  big=true
-            div
-            a.ui.button(href="/rental/#{_id}/")
-                |view
-                i.right.chevron.icon
-            +reserve_button

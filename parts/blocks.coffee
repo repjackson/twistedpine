@@ -178,17 +178,17 @@ if Meteor.isClient
             Meteor.call 'downvote', @, ->
 
 
-    Template.bookmark_button.events
-        'click .bookmark': (e,t)->
+    Template.favorite_button.events
+        'click .favorite': (e,t)->
             $(e.currentTarget).closest('.button').transition('pulse',200)
             Docs.update @_id, 
                 $addToSet: 
-                    bookmarker_ids: Meteor.userId()
+                    favoriter_ids: Meteor.userId()
             Meteor.users.update Meteor.userId(), 
                 $addToSet:
-                    bookmark_ids:@_id
+                    favorite_ids:@_id
             $('body').toast({
-                title: "bookmarked"
+                title: "favorited"
                 # message: 'Please see desk staff for key.'
                 class : 'success'
                 position:'bottom right'
@@ -204,16 +204,16 @@ if Meteor.isClient
 
 
 
-        'click .unbookmark': (e,t)->
+        'click .unfavorite': (e,t)->
             $(e.currentTarget).closest('.button').transition('pulse',200)
             Docs.update @_id, 
                 $pull:
-                    bookmarker_ids: Meteor.userId()
+                    favoriter_ids: Meteor.userId()
             Meteor.users.update Meteor.userId(), 
                 $pull:
-                    bookmark_ids:@_id
+                    favorite_ids:@_id
             $('body').toast({
-                title: "unbookmarked"
+                title: "unfavorited"
                 # message: 'Please see desk staff for key.'
                 class : 'info'
                 position:'bottom right'
@@ -228,9 +228,9 @@ if Meteor.isClient
                 })
                     
                     
-    Template.bookmark_button.helpers
-        bookmarked: ->
-            @bookmarker_ids and Meteor.userId() in @bookmarker_ids
+    Template.favorite_button.helpers
+        favorited: ->
+            @favoriter_ids and Meteor.userId() in @favoriter_ids
 
     # Template.doc_card.onCreated ->
     #     @autorun => Meteor.subscribe 'doc', Template.currentData().doc_id

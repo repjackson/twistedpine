@@ -1,13 +1,6 @@
 template(name='food')
     .ui.stackable.padded.grid
         .sixteen.wide.column
-            if currentUser
-                .ui.button.add_food
-                    i.large.plus.icon
-                    |food
-                .ui.button.add_drink
-                    i.large.plus.icon
-                    |drink
             .ui.inline.header 
                 +ibig name='pizza'
                 |food
@@ -17,6 +10,16 @@ template(name='food')
                 +i name='salad'
             .ui.big.button
                 +i name='pizza'
+            if currentUser
+                .ui.button.add_food
+                    i.large.plus.icon
+                    |food
+                .ui.button.add_drink
+                    i.large.plus.icon
+                    |drink
+            .ui.icon.input
+                i.search.icon
+                input.search_food(type='text' placeholder='search...')
             .ui.big.header 
                 +ibig name='beer'
                 |drinks
@@ -43,7 +46,7 @@ template(name='food')
                     +food_card
         
 template(name='food_card')
-    a.card(href="/food/#{_id}")
+    a.card.fly_right(href="/food/#{_id}")
         img.ui.centered.image(src="{{c.url image_id height=500 width=500 background='white' crop='pad'}}")
         .content
             a.ui.header(href="/food/#{_id}") #{title}
@@ -56,8 +59,8 @@ template(name='food_edit')
     with current_doc
         .ui.stackable.padded.grid
             .row
-                .six.wide.column.scrolling
-                    a.ui.big.icon.green.circular.button(href="/#{model}/#{_id}/")
+                .six.wide.column.scrollin
+                    a.ui.big.icon.green.circular.button.fly_down(href="/#{model}/#{_id}/")
                         i.checkmark.big.icon
                     .ui.inline.header 
                         small editing
@@ -65,14 +68,15 @@ template(name='food_edit')
                         small food
                     +text_edit key='title' icon='header' direct=true
                     +image_edit key='image_id' direct=true
-                    +array_edit key='tags' icon='tags' direct=true
-                    +array_edit key='location_tags' label='location tags' icon='marker' direct=true
+                    +array_edit key='tags' label='tags' icon='tags' direct=true
+                    +array_edit key='ingredients' label='ingredients' icon='food' direct=true
+                    // +array_edit key='location_tags' label='location tags' icon='marker' direct=true
                     .ui.icon.small.red.button.delete_food_item 
                         i.trash.icon
                     if in_dev
                         +print_this
+                .six.wide.column.scrollin
                     +html_edit key='description' direct=true
-                .six.wide.column.scrolling
                     +text_edit key='section' label='section' direct=true
                     // +number_edit key='point_price' icon='coins' label='point price' direct=true
                     +number_edit key='dollar_price' icon='coins' label='dollar price' direct=true
@@ -80,7 +84,7 @@ template(name='food_edit')
                     // +key_value_set key='section' value='salad' direct=true
                     +number_edit key='inventory' label='inventory' icon='warehouse' direct=true
                     +link_edit key='link' label='link' icon='globe' direct=true
-                .three.wide.column.scrolling
+                .three.wide.column.scrollin
                     +boolean_edit key='published' label='published'
                     +number_edit key='calories' label='calories' icon='food' direct=true
                     
@@ -137,7 +141,7 @@ template(name='food_view')
                     if can_edit
                         a.ui.icon.large.basic.button(href="/food/#{_id}/edit")
                             i.pencil.large.blue.icon
-                    +bookmark_button
+                    +favorite_button
                     .ui.small.inline.header
                         |added by #{_author_username}
                         |#{when}
@@ -155,7 +159,7 @@ template(name='food_view')
                         each product_orders 
                             .ui.item #{when}
                     .ui.header #{calories} cals
-                .eight.wide.column.scrolling
+                .eight.wide.column.scrollin
                     img.ui.centered.rounded.shadowed.image(src="{{c.url image_id crop='fit'}}")
                     i.large.tag.icon        
                     each tags 
@@ -163,7 +167,7 @@ template(name='food_view')
                             |#{this}
                     +html_view key='description' direct=true
                     +comments
-                .four.wide.column.scrolling
+                .four.wide.column.scrollin
                     +number_view key='point_price' icon='coins' label='point price' direct=true
                     // .ui.header inventory #{inventory} available
                     .ui.header #{order_total} total orders

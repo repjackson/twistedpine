@@ -79,14 +79,14 @@ template(name='doc_array_togggle')
         
         
         
-template(name='bookmark_button')
+template(name='favorite_button')
     // if currentUser
-    if bookmarked
-        .ui.icon.compact.blue.circular.button.unbookmark(class=bookmark_button_class title='unbookmark')
-            +i name='bookmark' cl='ui avatar image'
+    if favorited
+        .ui.icon.compact.red.circular.button.unfavorite(class=favorite_button_class title='unfavorite')
+            +i name='heart' cl='ui inline image'
     else
-        .ui.icon.compact.small.basic.circular.button.bookmark(class=bookmark_button_class title='bookmark')
-            +ioffice name='bookmark' cl='ui avatar image'
+        .ui.icon.compact.small.basic.circular.button.favorite(class=favorite_button_class title='favorite')
+            +ioffice name='heart' cl='ui inline image'
             // +ios name='bookmark'
     //- each list_users
     //-     +user_info
