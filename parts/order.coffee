@@ -25,7 +25,9 @@ if Meteor.isClient
     Template.order_edit.onCreated ->
         @autorun => Meteor.subscribe 'doc', Router.current().params.doc_id
         @autorun => Meteor.subscribe 'product_from_order_id', Router.current().params.doc_id, ->
-        # @autorun => Meteor.subscribe 'model_docs', 'dish'
+        @autorun => Meteor.subscribe 'model_docs', 'ingredient', ->
+        @autorun => Meteor.subscribe 'model_docs', 'food', ->
+            
 
     Template.order_edit.helpers
         # all_dishes: ->
@@ -55,6 +57,8 @@ if Meteor.isClient
 
 
     Template.order_edit.events
+        'click .mark_complete': ->
+            console.log @
         'click .select_dish': ->
             Docs.update Router.current().params.doc_id,
                 $set:

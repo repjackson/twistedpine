@@ -18,6 +18,22 @@ Template.registerHelper 'ref_product', () ->
     Docs.findOne 
         _id: @product_id
 
+Template.registerHelper 'product_ingredients', ()->
+    if @ingredient_ids
+        Docs.find 
+            model:'ingredient'
+            _id:$in:@ingredient_ids
+            
+            
+Template.registerHelper 'order_ingredients', ()->
+    if @product_id 
+        product = Docs.findOne @product_id
+    
+        if product.ingredient_ids
+            Docs.find 
+                model:'ingredient'
+                _id:$in:product.ingredient_ids
+
 Template.registerHelper 'current_username', () ->
     Router.current().params.username
 

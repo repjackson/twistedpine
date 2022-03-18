@@ -4,53 +4,37 @@ template(name='food')
             .ui.inline.header 
                 +ibig name='pizza'
                 |food
-            .ui.big.button
-                +i name='beer'
-            .ui.big.button
-                +i name='salad'
-            .ui.big.button
-                +i name='pizza'
             if currentUser
-                .ui.button.add_food
+                .ui.icon.button.add_food
                     i.large.plus.icon
-                    |food
-                .ui.button.add_drink
-                    i.large.plus.icon
-                    |drink
             .ui.icon.input
                 if current_query
                     i.large.remove.red.link.circular.icon.clear_query(title='clear query')
                 else
                     i.search.icon
                 input.search_food(type='text' placeholder='search...' value=current_query)
-            // if drink_docs.count
-            //     .ui.big.header 
-            //         +ibig name='beer'
-            //         |drinks
-            //     .ui.stackable.four.stackable.cards
-            //         each drink_docs
-            //             +drink_card
-            if pizza_docs.count
+            .scrolling        
+                if pizza_docs.count
+                    .ui.big.header 
+                        +ibig name='pizza'
+                        |pizzas
+                    .ui.stackable.cards
+                        each pizza_docs
+                            +food_card
+                if salad_docs.count
+                    .ui.big.header 
+                        +ibig name='salad'
+                        |salads
+                    .ui.stackable.cards
+                        each salad_docs
+                            +food_card
                 .ui.big.header 
-                    +ibig name='pizza'
-                    |pizzas
-                .ui.stackable.four.cards
-                    each pizza_docs
+                    +ibig name='food'
+                    |everything else
+                .ui.stackable.cards.scrolling
+                    each unfiltered_food
                         +food_card
-            if salad_docs.count
-                .ui.big.header 
-                    +ibig name='salad'
-                    |salads
-                .ui.stackable.four.cards
-                    each salad_docs
-                        +food_card
-            .ui.big.header 
-                +ibig name='food'
-                |everything else
-            .ui.stackable.four.cards
-                each unfiltered_food
-                    +food_card
-        
+            
 template(name='food_card')
     a.card.fly_right(href="/food/#{_id}")
         img.ui.centered.image(src="{{c.url image_id height=500 width=500 background='white' crop='pad'}}")
@@ -59,6 +43,8 @@ template(name='food_card')
             small #{calories} cals
             .ui.inline.header $#{price}
             +i name='pizza'
+            each ingredient_titles 
+                .ui.large.basic.label #{this}
         
         
 template(name='food_edit')
@@ -75,7 +61,7 @@ template(name='food_edit')
                     +text_edit key='title' icon='header' direct=true
                     +image_edit key='image_id' direct=true
                     +array_edit key='tags' label='tags' icon='tags' direct=true
-                    +array_edit key='ingredients' label='ingredients' icon='food' direct=true
+                    // +array_edit key='ingredients' label='ingredients' icon='food' direct=true
                     // +array_edit key='location_tags' label='location tags' icon='marker' direct=true
                     .ui.icon.small.red.button.delete_food_item 
                         i.trash.icon
@@ -135,16 +121,27 @@ template(name='food_view')
                         each product_orders 
                             .ui.item #{when}
                     .ui.header #{calories} cals
-                .eight.wide.column.scrollin
                     img.ui.centered.rounded.shadowed.image(src="{{c.url image_id crop='fit'}}")
-                    i.large.tag.icon        
-                    each tags 
-                        a.ui.compact.button.goto_tag
-                            |#{this}
+                .twelve.wide.column.scrollin
+                    .ui.header 
+                        +i name='food'
+                        |ingredients
+                    // each ingredient_titles
+                    //     .ui.big.basic.label #{this}
+                    .ui.cards
+                        each product_ingredients
+                            a.ui.card(href="/ingredient/#{_id}")
+                                img.ui.image(src="{{c.url image_id crop='fit'}}")
+                                .content
+                                    |#{title}
+                    if tags 
+                        i.large.tag.icon        
+                        each tags 
+                            a.ui.compact.button.goto_tag
+                                |#{this}
                     +html_view key='description' direct=true
                     +comments
-                .four.wide.column.scrollin
-                    +number_view key='point_price' icon='coins' label='point price' direct=true
+                    // +number_view key='point_price' icon='coins' label='point price' direct=true
                     // .ui.header inventory #{inventory} available
                     .ui.header #{order_total} total orders
                     div

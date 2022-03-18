@@ -56,15 +56,18 @@ template(name='nav')
             a.item.zoomer(href='/food' class="{{isActivePath '/food'}}" title='food')
                 +i name='pizza' cl='ui inline mini image'
                 |food
-            a.disabled.item.zoomer(href='/orders' class="{{isActivePath '/orders'}}" title='orders')
+            a.item.zoomer(href='/orders' class="{{isActivePath '/orders'}}" title='orders')
                 +i name='order-history' cl='ui inline mini image'
                 |orders
-            a.disabled.item.zoomer(href='/customers' class="{{isActivePath '/customers'}}" title='orders')
-                +i name='groups' cl='ui inline mini image'
-                |customers
-            a.disabled.item.zoomer(href='/staff' class="{{isActivePath '/staff'}}" title='orders')
-                +i name='shield' cl='ui inline mini image'
-                |staff
+            a.item.zoomer(href='/ingredients' class="{{isActivePath '/ingredients'}}" title='ingredients')
+                +i name='food' cl='ui inline mini image'
+                |ingredients
+            // a.disabled.item.zoomer(href='/customers' class="{{isActivePath '/customers'}}" title='orders')
+            //     +i name='groups' cl='ui inline mini image'
+            //     |customers
+            // a.disabled.item.zoomer(href='/staff' class="{{isActivePath '/staff'}}" title='orders')
+            //     +i name='shield' cl='ui inline mini image'
+            //     |staff
         .right.menu
             if cart_items
                 a.item(href="/cart") 

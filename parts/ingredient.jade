@@ -1,8 +1,43 @@
+template(name='ingredients')
+    .ui.stackable.padded.grid
+        .sixteen.wide.column
+            .ui.inline.header 
+                +ibig name='pizza'
+                |ingredient
+            if currentUser
+                .ui.icon.button.add_ingredient
+                    i.large.plus.icon
+            .ui.icon.input
+                if current_query
+                    i.large.remove.red.link.circular.icon.clear_query(title='clear query')
+                else
+                    i.search.icon
+                input.search_ingredient(type='text' placeholder='search...' value=current_query)
+            // if drink_docs.count
+            //     .ui.big.header 
+            //         +ibig name='beer'
+            //         |drinks
+            //     .ui.stackable.four.stackable.cards
+            //         each drink_docs
+            //             +drink_card
+            .ui.stackable.four.cards
+                each ingredient_docs
+                    +ingredient_card
+        
+template(name='ingredient_card')
+    a.card.fly_right(href="/ingredient/#{_id}")
+        img.ui.centered.image(src="{{c.url image_id height=500 width=500 background='white' crop='pad'}}")
+        .content
+            a.ui.header(href="/ingredient/#{_id}") #{title}
+            small #{calories} cals
+
+
+
 template(name='ingredient_edit')
     with current_doc
         .ui.stackable.padded.grid
             .row
-                .six.wide.column.scrolling
+                .six.wide.column.scrollin
                     a.ui.big.icon.green.circular.button(href="/#{model}/#{_id}/")
                         i.checkmark.big.icon
                     .ui.inline.header 
@@ -11,6 +46,7 @@ template(name='ingredient_edit')
                         small ingredient
                     +text_edit key='title' icon='header' direct=true
                     +image_edit key='image_id' direct=true
+                .six.wide.column.scrollin
                     +array_edit key='tags' icon='tags' direct=true
                     +array_edit key='location_tags' label='location tags' icon='marker' direct=true
                     .ui.icon.small.red.button.delete_ingredient_item 
@@ -20,16 +56,15 @@ template(name='ingredient_edit')
                     // if is_admin
                     //     +text_edit key='model' direct=true
                     //     // +key_value_edit key='model' value='ingredient' icon='blog' label='make ingredient' direct=true
-                    //     // +key_value_edit key='model' value='food' icon='food' label='make food' direct=true
+                    //     // +key_value_edit key='model' value='ingredient' icon='ingredient' label='make ingredient' direct=true
                     //     +text_edit key='app' label='app' icon='code' direct=true
                     +html_edit key='description' direct=true
-                .six.wide.column.scrolling
                     .ui.segment
 template(name='ingredient_view')
     with current_doc
         .ui.stackable.padded.grid
             .row
-                .six.wide.column.scrolling
+                .six.wide.column.scrollin
                     .ui.inline.header 
                         small viewing
                         |'#{title}'
@@ -46,8 +81,12 @@ template(name='ingredient_view')
                     // if is_admin
                     //     +text_view key='model' direct=true
                     //     // +key_value_view key='model' value='ingredient' icon='blog' label='make ingredient' direct=true
-                    //     // +key_value_view key='model' value='food' icon='food' label='make food' direct=true
+                    //     // +key_value_view key='model' value='ingredient' icon='food' label='make food' direct=true
                     //     +text_view key='app' label='app' icon='code' direct=true
                     +html_view key='description' direct=true
-                .six.wide.column.scrolling
+                .six.wide.column.scrollin
                     // .ui.segment
+                    .ui.header featured in
+                    .ui.large.list 
+                        each ingredient_products
+                            a.item(href="/food/#{_id}") #{title}
