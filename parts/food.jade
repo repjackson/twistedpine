@@ -23,13 +23,13 @@ template(name='food')
                 else
                     i.search.icon
                 input.search_food(type='text' placeholder='search...' value=current_query)
-            if drink_docs.count
-                .ui.big.header 
-                    +ibig name='beer'
-                    |drinks
-                .ui.stackable.four.stackable.cards
-                    each drink_docs
-                        +drink_card
+            // if drink_docs.count
+            //     .ui.big.header 
+            //         +ibig name='beer'
+            //         |drinks
+            //     .ui.stackable.four.stackable.cards
+            //         each drink_docs
+            //             +drink_card
             if pizza_docs.count
                 .ui.big.header 
                     +ibig name='pizza'
@@ -93,42 +93,8 @@ template(name='food_edit')
                 .three.wide.column.scrollin
                     +boolean_edit key='published' label='published'
                     +number_edit key='calories' label='calories' icon='food' direct=true
-                    
-    
-template(name='food_location')
-    .ui.inline.header current location
-    |#{current_location}
-    
-    
-
-
-
-template(name='user_foods')
-    .scrolling
-        if is_current_user
-            .ui.circular.button.add_food
-                i.plus.icon
-                |food
-        each foods
-            +profile_food_item
-
-template(name='profile_food_item')
-    .ui.segment.grid
-        .row
-            .four.wide.column
-                +image_view key='image' direct=true cl='zoom ui tiny image'
-            .twelve.wide.column
-                .ui.header #{title}
-                a.ui.small.header.inline.lowercase(href="/food/#{_id}/")
-                    |#{price_per_serving}c / #{serving_unit}
-                .ui.small.inline.header #{when}
-                a.ui.button(href="/food/#{_id}/")
-                    |view
-                    i.right.chevron.icon
-                if is_admin
-                    +remove_button
-        
-        
+                        
+                    +ingredient_picker
         
 template(name='food_view')
     with current_doc
@@ -141,22 +107,26 @@ template(name='food_view')
                     //     |#{title}
                     //     small food
                     .ui.big.header #{title}
-                    a.ui.big.compact.button.fly_left(href="/" title='shop')
+                    a.ui.big.compact.button.fly_left(href="/food" title='food')
                         i.left.chevron.icon
-                        +i name='shop' cl='ui inline image'
+                        +i name='pizza' cl='ui inline image'
                     if can_edit
                         a.ui.icon.large.basic.button(href="/food/#{_id}/edit")
                             i.pencil.large.blue.icon
                     +favorite_button
-                    .ui.small.inline.header
-                        |added by #{_author_username}
-                        |#{when}
+                    // .ui.small.inline.header
+                    //     |added by #{_author_username}
+                    //     |#{when}
                     .ui.hidden.divider
                     +voting_full
-                    a.ui.fluid.basic.green.big.button.add_to_cart
+                    a.ui.fluid.big.teal.button.make
+                        +i name='hand'
+                        |make
+                    .ui.hidden.divider
+                    a.ui.fluid.basic.disabled.green.big.button.add_to_cart
                         i.cart.plus.big.icon
                         |add to cart
-                    a.ui.fluid.green.big.button.quick_buy
+                    a.ui.fluid.green.big.disabled.button.quick_buy
                         i.lightning.big.icon
                         |quick buy
                     .ui.header 

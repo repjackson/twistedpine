@@ -7,14 +7,6 @@ if Meteor.isClient
         @layout 'user_layout'
         @render 'user_dashboard'
         ), name:'user_dashboard'
-    Router.route '/user/:username/rentals', (->
-        @layout 'user_layout'
-        @render 'user_rentals'
-        ), name:'user_rentals'
-    Router.route '/user/:username/services', (->
-        @layout 'user_layout'
-        @render 'user_services'
-        ), name:'user_services'
     Router.route '/user/:username/products', (->
         @layout 'user_layout'
         @render 'user_products'
@@ -55,19 +47,19 @@ if Meteor.isClient
 
 
     Template.user_favorites.onCreated ->
-        @autorun -> Meteor.subscribe 'user_bookmarked_docs', Router.current().params.username
+        @autorun -> Meteor.subscribe 'user_favorited_docs', Router.current().params.username, ->
 
 
     Template.user_favorites.helpers
-        bookmarked_docs: ->
+        favorited_docs: ->
             user = Meteor.users.findOne username:Router.current().params.username
             Docs.find 
-                _id: $in: user.bookmark_ids
+                _id: $in: user.favorite_ids
 if Meteor.isServer
-    Meteor.publish 'user_bookmarked_docs', (username)->
+    Meteor.publish 'user_favorited_docs', (username)->
         user = Meteor.users.findOne username:username
         Docs.find 
-            _id: $in: user.bookmark_ids
+            _id: $in: user.favorite_ids
         
 if Meteor.isClient
     Template.user_layout.onCreated ->
