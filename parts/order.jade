@@ -1,0 +1,200 @@
+template(name='cart')
+    .ui.stackable.padded.grid
+        .ui.sixteen.wide.column
+            .ui.header 
+                i.shopping.cart.icon
+                |cart 
+            .ui.large.list
+                each cart_items
+                    .item
+                        .ui.inline.header #{ref_product.title}
+                        i.remove.circular.link.icon.remove_item
+                    
+                    
+template(name='orders')
+    .ui.center.aligned.big.header 
+        +ibig name='order-history'
+        |orders
+
+template(name='order_view')
+    with current_doc
+        .ui.stackable.padded.grid
+            .row
+                .four.wide.center.aligned.column
+                    // a.ui.circular.compact.button(href="/food/#{food_id}/")
+                    //     i.left.chevron.icon
+                    //     img.ui.avatar.image(src="{{c.url order_product.image width=200 height=200}}")    
+                    //     |#{order_product.title}
+                    a.ui.circular.compact.button.fly_left(href="/product/#{product_id}/")
+                        i.left.chevron.icon
+                        img.ui.avatar.image(src="{{c.url order_product.image width=200 height=200}}")    
+                        |#{order_product.title} product
+                .eight.wide.center.aligned.column
+                    .ui.header view '#{order_product.title}' order
+                .four.wide.center.aligned.column
+                    if can_edit
+                        a.ui.large.circular.icon.button(href="/order/#{_id}/edit")
+                            i.pencil.large.icon
+            .three.column.row
+                .column
+                    .ui.header ordered #{when}
+                    .ui.header order price #{order_price}
+                    
+                    .ui.header 
+                        +i name='shop'
+                        |product
+                    .ui.segment 
+                        with order_product
+                            a(href="/product/#{_id}/")
+                                img.ui.rounded.image(src="{{c.url image width=400 height=400}}")
+                            a(href="/product/#{_id}/")
+                                .ui.header #{title}
+                            .ui.header #{serving_purchase_price} serving perchase price
+                            //- .ui.header #{cook_tip} cook tip
+                            .ui.header $#{order_total_transaction_amount} 
+                                small total transaction amount
+                    div
+                .column
+                    .ui.inline.header 
+                        small available 
+                        |{{from_now datetime_available}}:
+                    +textarea_view key='description'
+                    .ui.small.inline.header {{long_date datetime_available}}
+                    // .ui.header ingredients
+                    // each order_product.ingredients
+                    //     .ui.label #{this}
+                    .ui.header
+                        if pickup
+                            i.checkmark.icon
+                        else 
+                            |no
+                        |pickup
+                    .ui.header 
+                        if delivery
+                            i.checkmark.icon
+                        else 
+                            |no
+                        |delivery
+                    // .ui.header #{servings_left} servings left
+                    if can_edit
+                        .ui.small.compact.button.cancel_order
+                            i.remove.icon
+                            |cancel
+                    .ui.hidden.divider
+                    +comments
+                .column
+                    .ui.header buyer #{_author_username}
+                    with _author
+                        +user_card
+                    // .ui.header seller #{_author_username}
+                    // with _author
+                    //     +user_card
+
+
+template(name='order_edit')
+    with current_doc
+        .ui.stackable.padded.grid
+            .five.wide.column
+                .ui.small.grey.inline.header editing order
+                .ui.inline.header #{product_title}
+                img.ui.image(src="{{c.url order_product.image_id width=200 height=200}}")    
+                
+                div
+                // +float_edit key='serving_purchase_price' label='serving purchase price' direct=true
+                // +float_edit key='cook_tip' label='cook tip' direct=true
+                .ui.header $#{order_total_transaction_amount} 
+                    small total transaction amount
+                .ui.header product 
+                with order_product
+                    a.ui.small.header(href="/product/#{product_id}") #{title}
+                    +image_view key='image' direct=true
+                    +html_view key='description' direct=true
+            .five.wide.column
+                .ui.big.label 
+                    #{order_type}: order type
+                if key_value_is 'order_type' 'rental'
+                    .ui.header
+                        i.big.clock.icon
+                        |rental
+                .ui.header product point price: #{product_point_price} points
+                // .ui.header product dollar price: $#{product_dollar_price}
+                .ui.header 
+                    small your credit: 
+                    strong #{author.points}pts
+                if order_product.has_daily_rate
+                    .ui.big.button.pick_daily_rate 
+                        i.sun.icon
+                        |daily rate: #{order_product.daily_rate}
+                    +key_value_edit key='reservation_type' value='daily'
+                if order_product.has_hourly_rate
+                    .ui.big.button.pick_hourly_rate 
+                        i.clock.icon
+                        |hourly rate #{order_product.hourly_rate}
+                    +key_value_edit key='reservation_type' value='hourly'
+                if key_value_is 'order_type' 'product'
+                    .ui.header 
+                        small credit after purchase 
+                        strong #{user_points_after_purchase}p
+                    .ui.header 
+                        +i name='delivery'
+                        |delivery method
+                    +key_value_edit key='delivery_method' value='delivery' label='delivery' icon='deliver-food'
+                    +key_value_edit key='delivery_method' value='pickup' label='pickup' icon='contactless-delivery'
+
+                    if key_value_is 'delivery_method' 'delivery'
+                        +datetime_edit key='delivery_timedate' label='delivery timedate' direct=true
+                    if key_value_is 'delivery_method' 'pickup'
+                        +datetime_edit key='pickup_timedate' label='pickup timedate' direct=true
+            .five.wide.column
+                +textarea_edit key='notes' label='notes' direct=true
+                .ui.hidden.divider
+                if can_complete
+                    if key_value_is 'order_type' 'rental'
+                        .ui.header res type: #{reservation_type}
+                    a.ui.large.fluid.green.button.complete_order
+                        i.checkmark.large.icon   
+                        |complete order
+                else 
+                    .ui.header not enough points
+                    a.ui.large.fluid.green.disabled.button
+                        i.checkmark.large.icon   
+                        |complete order
+                .ui.hidden.divider
+                if can_delete
+                    .ui.red.compact.button.delete_order
+                        i.remove.icon   
+                        |cancel
+                else  
+                    .ui.red.disabled.button(title='existing reservations')
+                        i.remove.icon   
+                        | can't cancel  
+                if in_dev 
+                    +print_this
+
+
+
+template(name='user_orders')
+    .ui.header 
+        +i name='order-history'
+        |user orders
+    .scrolling
+        each orders 
+            +profile_order_item
+
+template(name='profile_order_item')
+    .ui.segment.grid
+        .row
+            .four.wide.column
+                with order_product
+                    //- img.ui.mini.image(src=image)
+                    +image_view key='image' direct=true cl='zoom ui tiny image'
+            .twelve.wide.column
+                .ui.header #{order_product.title}
+                a.ui.small.header.inline.lowercase(href="/order/#{_id}/")
+                    |#{order_amount}c
+                .ui.small.inline.header #{when} by #{_author_username}
+                a.ui.button(href="/order/#{_id}/")
+                    |view
+                    i.right.chevron.icon
+                if is_admin
+                    +remove_button

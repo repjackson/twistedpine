@@ -1,0 +1,242 @@
+template(name='user_layout')
+    img.ui.fluid.image.checkin_banner(src="{{c.url 'frontrange' width=1000 height=1000 crop='crop'}}")
+    +nav
+    with user_from_username_param
+        .ui.stackable.padded.grid
+            .row
+                //- img.ui.image.checkin_banner(src="{{c.url banner_image width=1000 height=1000 crop='crop'}}")
+                .four.wide.column
+                    a.item(href="/user/#{user_from_username_param.username}")
+                        img.ui.centered.rounded.image(src="{{c.url image_id height=500 width=500 gravity='face' crop='fill'}}")
+                    .spacer
+                    a(href="/user/#{user.username}")
+                        .ui.center.aligned.header
+                            strong #{user.username}
+                            //- 
+                            //- strong #{user.first_name} #{user.last_name}
+                            //- small @#{user.username}        
+                        .ui.inline.header
+                            strong #{user.username}
+                            //- small @#{user.username}        
+                        a.ui.inline.header(href="/user/#{user_from_username_param.username}/credit" title='credit')
+                            //- +i name='coins'
+                            //- i.coins.icon
+                            |{{fixed user.points}}pts
+                    if is_current_user
+                        a.ui.icon.large.button(href="/user/#{user_from_username_param.username}/edit" title='profile settings')
+                            i.cog.icon
+                    else if is_admin
+                        a.ui.icon.button(href="/user/#{user_from_username_param.username}/edit" title='profile settings')
+                            +i name='settings' cl='ui avatar image'
+                    +friend_button
+                    if is_current_user
+                        +logout_button
+                        +logout_other_clients_button
+                    // if is_admin
+                    // +role_viewer
+                    if in_dev 
+                        +print_this
+                    +send_points_button
+                    +request_button
+                .twelve.wide.column
+                    +profile_nav_button label='dashboard' icon='dashboard' key='dashboard'
+                    +profile_nav_button label='products' icon='shop' key='products'
+                    +profile_nav_button label='orders' icon='money' key='orders'
+                    a.ui.large.button(href="/user/#{username}/credit" class="{{isActiveRoute regex='user_credit'}}")
+                        +i name='money' cl='ui avatar image'
+                        |credit
+                    a.ui.large.button(href="/user/#{username}/friends" class="{{isActiveRoute 'user_friends'}}")
+                        +i name='meeting' cl='ui avatar image'
+                        |friends
+                    a.ui.large.button(href="/user/#{username}/reservations" class="{{isActiveRoute 'user_reservations'}}")
+                        +i name='clock' cl='ui avatar image'
+                        |reservations
+        
+                    div.global_container
+                        .spacer
+                        +yield
+                        
+
+template(name='profile_nav_button')                        
+    a.ui.large.button(href="/user/#{current_username}/#{key}" class="{{isActiveRoute regex=key}}")
+        +i name=icon cl='ui avatar image'
+        |#{label}
+
+
+
+template(name='logout_other_clients_button')
+    a.ui.small.compact.button.logout_other_clients(href="#" title='logout other clients')
+        i.globe.icon
+        |log out other clients
+
+
+
+template(name='logout_button')
+    .ui.large.icon.button.logout(title='log out')
+        // i.sign.out.alternate.icon
+        +i name='exit'
+
+template(name='role_viewer')
+    .ui.inline.header 
+        +i name='shield'
+        |roles
+    each roles
+        .ui.label #{this}
+
+
+
+template(name='subscribe_user_button')
+    .ui.button.subscribe_user
+        +i name='subscription'
+        |subscribe
+
+template(name='user_dashboard')
+    .ui.stackable.grid
+        .two.column.row
+            .column.smallscroll
+                +user_bookmarks
+            .column.smallscroll
+                +user_orders_small
+            .column.smallscroll
+                +user_reservations_small
+            .column.smallscroll
+                +user_friends
+            .column.smallscroll
+                +user_products_small
+            .column.smallscroll
+                +user_services
+            
+
+
+template(name='user_orders_small')
+    .ui.header
+        +i name='order-history'
+        |orders
+
+template(name='user_reservations_small')
+    .ui.header
+        +i name='clock'
+        | reservations
+template(name='user_products_small')
+    .ui.header  
+        +i name='shop'
+        |products
+
+template(name='user_reservations')
+    .ui.header 
+        +i name='clock'
+        |reservations
+    .scrolling
+        .ui.segments
+            each reservations 
+                +profile_reservation_item
+
+template(name='user_bookmarks')
+    .ui.header 
+        +i name='bookmark'
+        |bookmarks
+    .ui.selection.link.animated.list
+        each bookmarked_docs 
+            a.item.fly_right(href="/product/#{_id}") 
+                img.ui.avatar.image(src="{{c.url image_id height=200 width=200 background='white' crop='pad'}}")
+                |#{title}
+
+template(name='user_friends')
+    .ui.one.column.grid 
+        .column
+            .ui.header 
+                +i name='friends'
+                |friended by
+            .scrolling
+                .ui.large.selection.link.animated.list
+                    each friended_by_users
+                        a.item(href="/user/#{username}") #{username}
+                    each current_user.friend_ids
+                        // .ui.header #{this}
+                        +user_info
+        .column
+            .ui.header 
+                +i name='chevron-down'
+                |friended
+            .scrolling
+                .ui.large.selection.link.animated.list
+                    each friended
+                        a.item(href="/user/#{username}") #{username}
+
+
+template(name='profile_reservation_item')
+    .ui.segment.grid
+        .row
+            .twelve.wide.column
+                .ui.header #{rental.title}
+        .row
+            .four.wide.column
+                with rental
+                    //- img.ui.mini.image(src=image)
+                    +image_view key='image_id' direct=true cl='zoom ui tiny image'
+            .twelve.wide.column
+                a.ui.header.inline.lowercase(href="/reservation/#{_id}/")
+                    small from 
+                    |{{cal_time start_datetime}}
+                a.ui.header.inline.lowercase(href="/reservation/#{_id}/")
+                    small to 
+                    |{{cal_time end_datetime}}
+                div
+                .ui.grey.inline.header #{hour_duration} hrs
+                .ui.grey.inline.header(title='credits')
+                    i.coins.icon
+                    | #{cost}
+                .ui.small.inline.header #{when} by #{_author_username}
+                a.ui.large.button(href="/reservation/#{_id}/")
+                    |view
+                    i.right.chevron.icon
+                if is_admin
+                    +remove_button
+
+
+
+template(name='user_handling')
+    .ui.small.header rentals that member is facilitating
+    .ui.three.cards
+        each handling_rentals 
+            +user_rental_card
+        
+        
+        
+template(name='user_rental_card')
+    .ui.small.card
+        a.zoom(href="/rental/#{_id}/")
+            img.ui.centered.image(src="{{c.url image_id height=200 width=200 background='white' crop='pad'}}")
+        .content
+            a.ui.inline.header(href="/rental/#{_id}/") #{title} 
+                if variable_price
+                    |~
+                if hourly_dollars
+                    .ui.label #{hourly_dollars}c/hr
+                if daily_dollars
+                    .ui.label #{daily_dollars}c/day
+            //- if hourly_karma
+            //-     +ismall name='yin-yang'
+            //-     |#{hourly_karma}/hr
+            //- if daily_karma
+            //-     +ismall name='yin-yang'
+            //-     | #{daily_karma}/day
+            +rental_status
+        .content
+            span(title='views')
+                +ismall name='eye'
+                |#{views}
+            div
+            +ismall name='marker'
+            each location_tags
+                .ui.label #{this}
+            div
+            +ismall name='tags'
+            each tags
+                .ui.label #{this}
+            +user_list_toggle key='bookmark_ids' add_icon='bookmark outline' remove_icon='bookmark' add_label='bookmark' remove_label='unbookmark'  big=true
+            div
+            a.ui.button(href="/rental/#{_id}/")
+                |view
+                i.right.chevron.icon
+            +reserve_button

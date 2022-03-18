@@ -1,0 +1,213 @@
+template(name='food')
+    .ui.stackable.padded.grid
+        .sixteen.wide.column
+            .ui.inline.header 
+                +ibig name='pizza'
+                |food
+            .ui.big.button
+                +i name='hamburger'
+            .ui.big.button
+                +i name='salad'
+            .ui.big.button
+                +i name='pizza'
+            .ui.big.header 
+                +ibig name='hamburger'
+                |burgers
+            .ui.stackable.four.stackable.cards
+                each burgers
+                    +food_card
+            .ui.big.header 
+                +ibig name='pizza'
+                |pizzas
+            .ui.stackable.four.cards
+                each pizzas
+                    +food_card
+            .ui.big.header 
+                +ibig name='salad'
+                |salads
+            .ui.stackable.four.cards
+                each salads
+                    +food_card
+            .ui.big.header 
+                +ibig name='food'
+                |everything else
+            .ui.stackable.four.cards
+                each unfiltered_food
+                    +food_card
+        
+template(name='food_card')
+    a.card(href="/food/#{_id}")
+        img.ui.centered.image(src="{{c.url image_id height=500 width=500 background='white' crop='pad'}}")
+        .content
+            a.ui.header(href="/food/#{_id}") #{title}
+            small #{calories} cals
+            .ui.inline.header $#{price}
+        
+        
+template(name='food_edit')
+    with current_doc
+        .ui.stackable.padded.grid
+            .row
+                .six.wide.column.scrolling
+                    a.ui.big.icon.green.circular.button(href="/#{model}/#{_id}/")
+                        i.checkmark.big.icon
+                    .ui.inline.header 
+                        small editing
+                        |'#{title}'
+                        small food
+                    +text_edit key='title' icon='header' direct=true
+                    +image_edit key='image_id' direct=true
+                    +array_edit key='tags' icon='tags' direct=true
+                    +array_edit key='location_tags' label='location tags' icon='marker' direct=true
+                    .ui.icon.small.red.button.delete_food_item 
+                        i.trash.icon
+                    if in_dev
+                        +print_this
+                    +html_edit key='description' direct=true
+                .six.wide.column.scrolling
+                    +number_edit key='point_price' icon='coins' label='point price' direct=true
+                    +number_edit key='dollar_price' icon='coins' label='dollar price' direct=true
+                    +text_edit key='section' label='section' direct=true
+                    // +key_value_set key='section' value='salad' direct=true
+                    +number_edit key='inventory' label='inventory' icon='warehouse' direct=true
+                    +link_edit key='link' label='link' icon='globe' direct=true
+                .three.wide.column.scrolling
+                    +boolean_edit key='published' label='published'
+                    +number_edit key='calories' label='calories' icon='food' direct=true
+                    
+    
+template(name='food_location')
+    .ui.inline.header current location
+    |#{current_location}
+    
+    
+
+
+
+template(name='user_foods')
+    .scrolling
+        if is_current_user
+            .ui.circular.button.add_food
+                i.plus.icon
+                |food
+        each foods
+            +profile_food_item
+
+template(name='profile_food_item')
+    .ui.segment.grid
+        .row
+            .four.wide.column
+                +image_view key='image' direct=true cl='zoom ui tiny image'
+            .twelve.wide.column
+                .ui.header #{title}
+                a.ui.small.header.inline.lowercase(href="/food/#{_id}/")
+                    |#{price_per_serving}c / #{serving_unit}
+                .ui.small.inline.header #{when}
+                a.ui.button(href="/food/#{_id}/")
+                    |view
+                    i.right.chevron.icon
+                if is_admin
+                    +remove_button
+        
+        
+        
+template(name='food_view')
+    with current_doc
+        .ui.stackable.padded.grid
+            //- img.ui.large.rounded.image(src="{{c.url image width=500 height=500 gravity='face' crop='fill'}}")
+            .row
+                .four.wide.column
+                    // .ui.header 
+                    //     small viewing
+                    //     |#{title}
+                    //     small food
+                    .ui.big.header #{title}
+                    a.ui.big.compact.button.fly_left(href="/" title='shop')
+                        i.left.chevron.icon
+                        +i name='shop' cl='ui inline image'
+                    if can_edit
+                        a.ui.icon.large.basic.button(href="/food/#{_id}/edit")
+                            i.pencil.large.blue.icon
+                    +bookmark_button
+                    .ui.small.inline.header
+                        |added by #{_author_username}
+                        |#{when}
+                    .ui.hidden.divider
+                    +voting_full
+                    a.ui.fluid.basic.green.big.button.add_to_cart
+                        i.cart.plus.big.icon
+                        |add to cart
+                    a.ui.fluid.green.big.button.quick_buy
+                        i.lightning.big.icon
+                        |quick buy
+                    .ui.header 
+                        |orders 
+                    .ui.selection.animated.list
+                        each product_orders 
+                            .ui.item #{when}
+                    .ui.header #{calories} cals
+                .eight.wide.column.scrolling
+                    img.ui.centered.rounded.shadowed.image(src="{{c.url image_id crop='fit'}}")
+                    i.large.tag.icon        
+                    each tags 
+                        a.ui.compact.button.goto_tag
+                            |#{this}
+                    +html_view key='description' direct=true
+                    +comments
+                .four.wide.column.scrolling
+                    +number_view key='point_price' icon='coins' label='point price' direct=true
+                    // .ui.header inventory #{inventory} available
+                    .ui.header #{order_total} total orders
+                    div
+                    if link 
+                        +link_view key='link' label='link' direct=true
+                    // unless sold_out
+                    //     if point_price
+                    //         .ui.big.green.fluid.button.buy_food.fly_right 
+                    //             i.cart.large.icon
+                    //             |buy for #{point_price}p
+                    //     // .ui.horizontal.divider or
+                    //     // if dollar_price
+                    //     //     .ui.big.green.fluid.button.buy_food 
+                    //     //         i.cart.large.icon
+                    //     //         |buy for $#{dollar_price}
+                    // else 
+                    //     .ui.big.disabled.fluid.basic.button
+                    //         |sold out
+                    .ui.hidden.divider
+                    div
+                    .ui.inline.header
+                        +i name='delivery'
+                        |delivery
+                    div
+                    if delivery_instructions
+                        .ui.small.inline.header
+                            |delivery instructions:
+                        |#{delivery_instructions}      
+                    +food_orders
+                    +related_foods
+                    
+        
+        
+template(name='related_foods')
+    .ui.header 
+        +i name='code-fork'
+        |#{related_foods.count}
+        |related foods
+    .ui.selection.animated.link.list
+        each related_food_docs
+            a.item(href="/food/#{_id}")
+                | #{title}
+                |#{price}p
+    
+template(name='food_orders')
+    .ui.header 
+        +i name='order-history'
+        |#{food_order_docs.count}
+        |orders
+    .ui.selection.animated.link.list
+        each food_order_docs
+            a.item(href="/order/#{_id}")
+                | #{when} #{_author_username}
+    
+        
