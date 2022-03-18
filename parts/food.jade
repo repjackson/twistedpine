@@ -18,26 +18,32 @@ template(name='food')
                     i.large.plus.icon
                     |drink
             .ui.icon.input
-                i.search.icon
-                input.search_food(type='text' placeholder='search...')
-            .ui.big.header 
-                +ibig name='beer'
-                |drinks
-            .ui.stackable.four.stackable.cards
-                each drink_docs
-                    +drink_card
-            .ui.big.header 
-                +ibig name='pizza'
-                |pizzas
-            .ui.stackable.four.cards
-                each pizza_docs
-                    +food_card
-            .ui.big.header 
-                +ibig name='salad'
-                |salads
-            .ui.stackable.four.cards
-                each salad_docs
-                    +food_card
+                if current_query
+                    i.large.remove.red.link.circular.icon.clear_query(title='clear query')
+                else
+                    i.search.icon
+                input.search_food(type='text' placeholder='search...' value=current_query)
+            if drink_docs.count
+                .ui.big.header 
+                    +ibig name='beer'
+                    |drinks
+                .ui.stackable.four.stackable.cards
+                    each drink_docs
+                        +drink_card
+            if pizza_docs.count
+                .ui.big.header 
+                    +ibig name='pizza'
+                    |pizzas
+                .ui.stackable.four.cards
+                    each pizza_docs
+                        +food_card
+            if salad_docs.count
+                .ui.big.header 
+                    +ibig name='salad'
+                    |salads
+                .ui.stackable.four.cards
+                    each salad_docs
+                        +food_card
             .ui.big.header 
                 +ibig name='food'
                 |everything else

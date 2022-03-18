@@ -13,13 +13,14 @@ if Meteor.isClient
     Template.food.onCreated ->
         @autorun => @subscribe 'food', ->
         @autorun => @subscribe 'drinks', ->
+        Session.setDefault 'query', null
             
     Template.food.events 
         'keyup .search_food': (e,t)->
             # if e.which is 13
             query = t.$('.search_food').val()
             console.log query
-            Session.set('current_query', query)
+            Session.set('query', query)
         'click .add_food': ->
             new_id = 
                 Docs.insert 
@@ -31,6 +32,38 @@ if Meteor.isClient
                 Docs.insert 
                     model:'drink'
             Router.go "/drink/#{new_id}/edit"
+        'click .clear_query': ->
+            Session.set('query',null)
+            
+    Template.food.helpers
+        drink_docs: ->
+            match = {model:'drink'}
+            if Session.get('query') 
+                match.title = {$regex:"#{Session.get('query')}", $options:'i'}
+            Docs.find match
+        salad_docs: ->
+            match = {model:'food',section:'salad'}
+            if Session.get('query') 
+                match.title = {$regex:"#{Session.get('query')}", $options:'i'}
+            Docs.find match
+            
+        pizza_docs: ->
+            match = {model:'food',section:'pizza'}
+            if Session.get('query') 
+                match.title = {$regex:"#{Session.get('query')}", $options:'i'}
+            Docs.find match
+            
+        unfiltered_food: ->
+            Docs.find 
+                model:'food'
+                section:$nin:['salad','burger','pizza']
+        ungrouped_food: ->
+            Docs.find 
+                model:'food'
+                
+        current_query: ->
+            Session.get('query')
+            
             
     Template.food_view.onCreated ->
         @autorun => @subscribe 'food_orders',Router.current().params.doc_id, ->
@@ -66,26 +99,6 @@ if Meteor.isClient
                 Docs.remove @_id
                 Router.go "/food"
 
-    Template.food.helpers
-        drink_docs: ->
-            Docs.find 
-                model:'drink'
-                # section:'burger'
-        salad_docs: ->
-            Docs.find 
-                model:'food'
-                section:'salad'
-        pizza_docs: ->
-            Docs.find 
-                model:'food'
-                section:'pizza'
-        unfiltered_food: ->
-            Docs.find 
-                model:'food'
-                section:$nin:['salad','burger','pizza']
-        ungrouped_food: ->
-            Docs.find 
-                model:'food'
     Template.food_view.helpers
         sold_out: -> @inventory < 1
         product_orders: ->
@@ -169,20 +182,6 @@ if Meteor.isClient
                     food_image_id:food.image_id
                     food_point_price:food.point_price
                     food_dollar_price:food.dollar_price
-            Router.go "/order/#{new_order_id}/checkout"
-            
-        'click .rent_food': (e,t)->
-            food = Docs.findOne Router.current().params.doc_id
-            new_order_id = 
-                Docs.insert 
-                    model:'order'
-                    order_type:'rental'
-                    food_id:food._id
-                    food_title:food.title
-                    food_image_id:food.image_id
-                    food_daily_rate:food.daily_rate
-                    food_hourly_rate:food.hourly_rate
-                    
             Router.go "/order/#{new_order_id}/checkout"
             
             
