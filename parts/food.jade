@@ -4,32 +4,36 @@ template(name='food')
             if currentUser
                 .ui.button.add_food
                     i.large.plus.icon
+                    |food
+                .ui.button.add_drink
+                    i.large.plus.icon
+                    |drink
             .ui.inline.header 
                 +ibig name='pizza'
                 |food
             .ui.big.button
-                +i name='hamburger'
+                +i name='beer'
             .ui.big.button
                 +i name='salad'
             .ui.big.button
                 +i name='pizza'
             .ui.big.header 
-                +ibig name='hamburger'
-                |burgers
+                +ibig name='beer'
+                |drinks
             .ui.stackable.four.stackable.cards
-                each burgers
-                    +food_card
+                each drink_docs
+                    +drink_card
             .ui.big.header 
                 +ibig name='pizza'
                 |pizzas
             .ui.stackable.four.cards
-                each pizzas
+                each pizza_docs
                     +food_card
             .ui.big.header 
                 +ibig name='salad'
                 |salads
             .ui.stackable.four.cards
-                each salads
+                each salad_docs
                     +food_card
             .ui.big.header 
                 +ibig name='food'
@@ -45,6 +49,7 @@ template(name='food_card')
             a.ui.header(href="/food/#{_id}") #{title}
             small #{calories} cals
             .ui.inline.header $#{price}
+            +i name='pizza'
         
         
 template(name='food_edit')
@@ -68,7 +73,8 @@ template(name='food_edit')
                         +print_this
                     +html_edit key='description' direct=true
                 .six.wide.column.scrolling
-                    +number_edit key='point_price' icon='coins' label='point price' direct=true
+                    +text_edit key='section' label='section' direct=true
+                    // +number_edit key='point_price' icon='coins' label='point price' direct=true
                     +number_edit key='dollar_price' icon='coins' label='dollar price' direct=true
                     +text_edit key='section' label='section' direct=true
                     // +key_value_set key='section' value='salad' direct=true

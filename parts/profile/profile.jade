@@ -40,7 +40,7 @@ template(name='user_layout')
                     +request_button
                 .twelve.wide.column
                     +profile_nav_button label='dashboard' icon='dashboard' key='dashboard'
-                    +profile_nav_button label='products' icon='shop' key='products'
+                    +profile_nav_button label='favorites' icon='heart' key='favorites'
                     +profile_nav_button label='orders' icon='money' key='orders'
                     a.ui.large.button(href="/user/#{username}/credit" class="{{isActiveRoute regex='user_credit'}}")
                         +i name='money' cl='ui avatar image'
@@ -48,9 +48,9 @@ template(name='user_layout')
                     a.ui.large.button(href="/user/#{username}/friends" class="{{isActiveRoute 'user_friends'}}")
                         +i name='meeting' cl='ui avatar image'
                         |friends
-                    a.ui.large.button(href="/user/#{username}/reservations" class="{{isActiveRoute 'user_reservations'}}")
-                        +i name='clock' cl='ui avatar image'
-                        |reservations
+                    a.ui.large.button(href="/user/#{username}/health" class="{{isActiveRoute 'user_health'}}")
+                        +i name='pulse' cl='ui avatar image'
+                        |health
         
                     div.global_container
                         .spacer

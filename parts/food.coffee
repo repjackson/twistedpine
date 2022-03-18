@@ -12,6 +12,7 @@ if Meteor.isClient
 
     Template.food.onCreated ->
         @autorun => @subscribe 'food', ->
+        @autorun => @subscribe 'drinks', ->
             
     Template.food.events 
         'click .add_food': ->
@@ -19,6 +20,12 @@ if Meteor.isClient
                 Docs.insert 
                     model:'food'
             Router.go "/food/#{new_id}/edit"
+            
+        'click .add_drink': ->
+            new_id = 
+                Docs.insert 
+                    model:'drink'
+            Router.go "/drink/#{new_id}/edit"
             
     Template.food_view.onCreated ->
         @autorun => @subscribe 'food_orders',Router.current().params.doc_id, ->
@@ -55,15 +62,15 @@ if Meteor.isClient
                 Router.go "/food"
 
     Template.food.helpers
-        burgers: ->
+        drink_docs: ->
             Docs.find 
-                model:'food'
-                section:'burger'
-        salads: ->
+                model:'drink'
+                # section:'burger'
+        salad_docs: ->
             Docs.find 
                 model:'food'
                 section:'salad'
-        pizzas: ->
+        pizza_docs: ->
             Docs.find 
                 model:'food'
                 section:'pizza'
@@ -198,7 +205,12 @@ if Meteor.isServer
         Docs.find
             model:$in:['food','product']
             # _author_id: user._id
-            app:'bc'
+            
+    Meteor.publish 'drinks', (username)->
+        # user = Meteor.users.findOne username:username
+        Docs.find
+            model:'drink'
+            # _author_id: user._id
             
     Meteor.publish 'user_food', (username)->
         user = Meteor.users.findOne username:username

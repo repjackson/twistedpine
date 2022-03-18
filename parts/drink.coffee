@@ -1,10 +1,10 @@
 if Meteor.isClient
     Router.route '/drinks', (->
         @layout 'layout'
-        @render 'drink'
-        ), name:'drink'
+        @render 'drinks'
+        ), name:'drinks'
 
-    Template.drink.onCreated ->
+    Template.drinks.onCreated ->
         @autorun => @subscribe 'drink', ->
     Template.drink_view.onCreated ->
         @autorun => @subscribe 'drink_orders',Router.current().params.doc_id, ->
@@ -40,7 +40,7 @@ if Meteor.isClient
                 Docs.remove @_id
                 Router.go "/drink"
 
-    Template.drink.helpers
+    Template.drinks.helpers
         drink_docs: ->
             Docs.find 
                 model:$in:['drink','product']

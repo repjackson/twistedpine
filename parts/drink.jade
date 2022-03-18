@@ -1,6 +1,6 @@
-template(name='drink')
+template(name='drinks')
     .ui.header 
-        +i name='pizza'
+        +i name='beer'
         |drink items
     .ui.stackable.centered.cards
         each drink_docs
@@ -11,13 +11,14 @@ template(name='drink_card')
         img.ui.centered.image(src="{{c.url image_id height=500 width=500 background='white' crop='pad'}}")
         .content
             a.ui.header(href="/drink/#{_id}") #{title}
+            +i name='beer'
         
         
 template(name='drink_edit')
     with current_doc
         .ui.stackable.padded.grid
-            .row
-                .six.wide.column.scrolling
+            .two.column.row
+                .column
                     a.ui.big.icon.green.circular.button(href="/#{model}/#{_id}/")
                         i.checkmark.big.icon
                     .ui.inline.header 
@@ -32,16 +33,17 @@ template(name='drink_edit')
                         i.trash.icon
                     if in_dev
                         +print_this
+                    +float_edit key='abv' label='abv %' direct=true
+                    +float_edit key='ibu' label='ibu' direct=true
                     +html_edit key='description' direct=true
-                .six.wide.column.scrolling
-                    +number_edit key='point_price' icon='coins' label='point price' direct=true
-                    +number_edit key='dollar_price' icon='money' label='money price' direct=true
+                .column
+                    // +number_edit key='point_price' icon='coins' label='point price' direct=true
+                    +float_edit key='dollar_price' icon='money' label='money price' direct=true
                     +number_edit key='inventory' label='inventory' icon='warehouse' direct=true
                     +link_edit key='link' label='link' icon='globe' direct=true
-                .three.wide.column.scrolling
                     +boolean_edit key='published' label='published'
                     +number_edit key='calories' label='calories' icon='drink' direct=true
-                    
+                    +text_edit key='section' label='section' direct=true
     
 template(name='drink_location')
     .ui.inline.header current location
@@ -121,7 +123,7 @@ template(name='drink_view')
                             |#{this}
                     +html_view key='description' direct=true
                     +comments
-                    +number_view key='point_price' icon='coins' label='point price' direct=true
+                    // +number_view key='point_price' icon='coins' label='point price' direct=true
                     .ui.header inventory #{inventory} units available
                     .ui.header inventory #{order_total} total orders
                     div
